@@ -6,6 +6,12 @@ public class BodyProperties {
     private Double radius;
     private Double atmosphereThickness;
 
+    BodyProperties(Double mass, Double radius, Double atmosphereThickness) {
+        this.mass = mass;
+        this.radius = radius;
+        this.atmosphereThickness = atmosphereThickness;
+    }
+
     public Double getMass() {
         return mass;
     }

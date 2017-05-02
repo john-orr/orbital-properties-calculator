@@ -14,8 +14,71 @@ public class OrbitalProperties {
         return orbitalPeriod;
     }
 
+    public Double getSemiMajorAxis() {
+        return semiMajorAxis;
+    }
+
+    public Double getApoapsisHeight() {
+        return apoapsisHeight;
+    }
+
+    public Double getApoapsisHeightAS() {
+        return apoapsisHeightAS;
+    }
+
+    public Double getPeriapsisHeight() {
+        return periapsisHeight;
+    }
+
+    public Double getPeriapsisHeightAS() {
+        return periapsisHeightAS;
+    }
+
+    public Double getEccentricity() {
+        return eccentricity;
+    }
+
     public void setOrbitalPeriod(Double orbitalPeriod) {
+        if (this.orbitalPeriod != null) {
+            throw new RecalculationException("Attemped recalculation of orbital period");
+        }
         this.orbitalPeriod = orbitalPeriod;
+    }
+
+    public void setSemiMajorAxis(Double semiMajorAxis) {
+        if (this.semiMajorAxis != null) {
+            throw new RecalculationException("Attemped recalculation of semi-major axis");
+        }
+        this.semiMajorAxis = semiMajorAxis;
+    }
+
+    public void setApoapsisHeight(Double apoapsisHeight) {
+        if (this.apoapsisHeight != null) {
+            throw new RecalculationException("Attempted recalculation of apoapsis height");
+        }
+        this.apoapsisHeight = apoapsisHeight;
+    }
+
+    public void setApoapsisHeightAS(Double apoapsisHeightAS) {
+        this.apoapsisHeightAS = apoapsisHeightAS;
+    }
+
+    public void setPeriapsisHeight(Double periapsisHeight) {
+        if (this.periapsisHeight != null) {
+            throw new RecalculationException("Attempted recalculation of periapsis height");
+        }
+        this.periapsisHeight = periapsisHeight;
+    }
+
+    public void setPeriapsisHeightAS(Double periapsisHeightAS) {
+        this.periapsisHeightAS = periapsisHeightAS;
+    }
+
+    public void setEccentricity(Double eccentricity) {
+        if (this.eccentricity != null) {
+            throw new RecalculationException("Attempted recalculation of eccentricity");
+        }
+        this.eccentricity = eccentricity;
     }
 
     public void setOrbitalPeriod(String orbitalPeriod) {
@@ -26,28 +89,12 @@ public class OrbitalProperties {
         }
     }
 
-    public Double getSemiMajorAxis() {
-        return semiMajorAxis;
-    }
-
-    public void setSemiMajorAxis(Double semiMajorAxis) {
-        this.semiMajorAxis = semiMajorAxis;
-    }
-
     public void setSemiMajorAxis(String semiMajorAxis) {
         try {
             this.semiMajorAxis = Double.valueOf(semiMajorAxis);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + semiMajorAxis);
         }
-    }
-
-    public Double getApoapsisHeight() {
-        return apoapsisHeight;
-    }
-
-    public void setApoapsisHeight(Double apoapsisHeight) {
-        this.apoapsisHeight = apoapsisHeight;
     }
 
     public void setApoapsisHeight(String apoapsisHeight) {
@@ -58,44 +105,12 @@ public class OrbitalProperties {
         }
     }
 
-    public Double getApoapsisHeightAS() {
-        return apoapsisHeightAS;
-    }
-
-    public void setApoapsisHeightAS(Double apoapsisHeightAS) {
-        this.apoapsisHeightAS = apoapsisHeightAS;
-    }
-
-    public Double getPeriapsisHeight() {
-        return periapsisHeight;
-    }
-
-    public void setPeriapsisHeight(Double periapsisHeight) {
-        this.periapsisHeight = periapsisHeight;
-    }
-
     public void setPeriapsisHeight(String periapsisHeight) {
         try {
             this.periapsisHeight = Double.valueOf(periapsisHeight);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + periapsisHeight);
         }
-    }
-
-    public Double getPeriapsisHeightAS() {
-        return periapsisHeightAS;
-    }
-
-    public void setPeriapsisHeightAS(Double periapsisHeightAS) {
-        this.periapsisHeightAS = periapsisHeightAS;
-    }
-
-    public Double getEccentricity() {
-        return eccentricity;
-    }
-
-    public void setEccentricity(Double eccentricity) {
-        this.eccentricity = eccentricity;
     }
 
     public void setEccentricity(String eccentricity) {
