@@ -63,9 +63,6 @@ public class OrbitalProperties {
     }
 
     public void setApoapsisHeightAS(Double apoapsisHeightAS) {
-        if (apoapsisHeightAS < 0) {
-            throw new ImpossibleOrbitException("Apoapsis is below surface. Value=" + apoapsisHeightAS);
-        }
         this.apoapsisHeightAS = apoapsisHeightAS;
     }
 
@@ -90,9 +87,6 @@ public class OrbitalProperties {
     }
 
     public void setPeriapsisHeightAS(Double periapsisHeightAS) {
-        if (periapsisHeightAS < 0) {
-            throw new ImpossibleOrbitException("Periapsis is below surface. Value=" + periapsisHeightAS);
-        }
         this.periapsisHeightAS = periapsisHeightAS;
     }
 

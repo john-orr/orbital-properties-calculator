@@ -47,16 +47,50 @@ public class Main {
                 orbitalProperties.setPeriapsisHeight(orbitalProperties.getSemiMajorAxis());
                 orbitalProperties.setApoapsisHeight(orbitalProperties.getSemiMajorAxis());
             } else {
+                // One of e, rA and rP will have been provided
                 if (orbitalProperties.getEccentricity() != null) {
-
+                    // 2ae = rA - rP and
+                    // 2a = rA + rP therefore
+                    // a + ae = rA or a(1+e)=rA
+                    Double a = orbitalProperties.getSemiMajorAxis();
+                    Double e = orbitalProperties.getEccentricity();
+                    orbitalProperties.setApoapsisHeight(a * (1 + e));
+                    orbitalProperties.setPeriapsisHeight(a * (1 - e));
+                }
+                if (orbitalProperties.getApoapsisHeight() != null) {
+                    Double a = orbitalProperties.getSemiMajorAxis();
+                    orbitalProperties.setPeriapsisHeight(2*a - orbitalProperties.getApoapsisHeight());
+                }
+                if (orbitalProperties.getPeriapsisHeight() != null) {
+                    Double a = orbitalProperties.getSemiMajorAxis();
+                    orbitalProperties.setApoapsisHeight(2*a - orbitalProperties.getPeriapsisHeight());
                 }
             }
-        } else {
-            // neither T nor a have been calculated
+        }
+        validateHeightsAboveSurface();
+    }
 
+    private static void validateHeightsAboveSurface() {
+        if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius()) {
+            throw new ImpossibleOrbitException(
+                    "Apoapsis is below surface. Value=" + (orbitalProperties.getApoapsisHeight() - bodyProperties
+                            .getRadius()));
+        } else if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius() + bodyProperties
+                .getAtmosphereThickness()) {
+            throw new ImpossibleOrbitException("Apoapsis is inside the atmosphere. Value=" + (orbitalProperties
+                    .getApoapsisHeight() - (bodyProperties.getRadius() + bodyProperties.getAtmosphereThickness())));
+        }
+        orbitalProperties.setApoapsisHeightAS(orbitalProperties.getApoapsisHeight() - bodyProperties.getRadius());
+        if (orbitalProperties.getPeriapsisHeight() < bodyProperties.getRadius()) {
+            throw new ImpossibleOrbitException(
+                    "Periapsis is below surface. Value=" + (orbitalProperties.getPeriapsisHeight() - bodyProperties
+                            .getRadius()));
+        } else if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius() + bodyProperties
+                .getAtmosphereThickness()) {
+            throw new ImpossibleOrbitException("Periapsis is inside the atmosphere. Value=" + (orbitalProperties
+                    .getPeriapsisHeight() - (bodyProperties.getRadius() + bodyProperties.getAtmosphereThickness())));
         }
         orbitalProperties.setPeriapsisHeightAS(orbitalProperties.getPeriapsisHeight() - bodyProperties.getRadius());
-        orbitalProperties.setApoapsisHeightAS(orbitalProperties.getApoapsisHeight() - bodyProperties.getRadius());
     }
 
     private static Double calculateTFromA() {
@@ -92,7 +126,7 @@ public class Main {
                 return false;
             }
         } else {
-            // One of T and a has been provided. We only need 1 of e, rA and rP now
+            // One of T and a has been provided
             int numPresent = countTier2Properties();
             if (numPresent > 1) {
                 System.out.println("Too much information provided!");
@@ -109,21 +143,6 @@ public class Main {
         numPresent += orbitalProperties.getApoapsisHeight() != null ? 1 : 0;
         numPresent += orbitalProperties.getPeriapsisHeight() != null ? 1 : 0;
         return numPresent;
-    }
-
-    private static boolean requireToBePresent(int num) {
-        int numPresent = 0;
-        numPresent += orbitalProperties.getEccentricity() != null ? 1 : 0;
-        numPresent += orbitalProperties.getApoapsisHeight() != null ? 1 : 0;
-        numPresent += orbitalProperties.getPeriapsisHeight() != null ? 1 : 0;
-        if (numPresent < num) {
-            System.out.println("Not enough information provided");
-            return false;
-        } else if (numPresent > num) {
-            System.out.println("Too much information provided!");
-            return false;
-        }
-        return true;
     }
 
     private static void readKnownValues() throws IOException {
