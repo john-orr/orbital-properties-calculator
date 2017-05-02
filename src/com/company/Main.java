@@ -25,13 +25,13 @@ public class Main {
     }
 
     private static void print() {
-        System.out.println("Orbital Period=\t\t\t" + orbitalProperties.getOrbitalPeriod());
-        System.out.println("Semi-Major Axis=\t\t" + orbitalProperties.getSemiMajorAxis());
-        System.out.println("Apoapsis Height=\t\t" + orbitalProperties.getApoapsisHeight());
-        System.out.println("Apoapsis Height AS=\t\t" + orbitalProperties.getApoapsisHeightAS());
-        System.out.println("Periapsis Height=\t\t" + orbitalProperties.getPeriapsisHeight());
-        System.out.println("Periapsis Height AS=\t" + orbitalProperties.getPeriapsisHeightAS());
-        System.out.println("Eccentricity=\t\t\t" + orbitalProperties.getEccentricity());
+        System.out.println(String.format("Orbital Period=\t\t%,.0f s", orbitalProperties.getOrbitalPeriod()));
+        System.out.println(String.format("Semi-Major Axis=\t%,.0f m", orbitalProperties.getSemiMajorAxis()));
+        System.out.println(String.format("Apoapsis=\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getApoapsisHeight(),
+                orbitalProperties.getApoapsisHeightAS()));
+        System.out.println(String.format("Periapsis=\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getPeriapsisHeight(),
+                orbitalProperties.getPeriapsisHeightAS()));
+        System.out.println(String.format("Eccentricity=\t\t%.2f", orbitalProperties.getEccentricity()));
     }
 
     private static void calculateUnknownValues() {
@@ -56,14 +56,18 @@ public class Main {
                     Double e = orbitalProperties.getEccentricity();
                     orbitalProperties.setApoapsisHeight(a * (1 + e));
                     orbitalProperties.setPeriapsisHeight(a * (1 - e));
-                }
-                if (orbitalProperties.getApoapsisHeight() != null) {
-                    Double a = orbitalProperties.getSemiMajorAxis();
-                    orbitalProperties.setPeriapsisHeight(2*a - orbitalProperties.getApoapsisHeight());
-                }
-                if (orbitalProperties.getPeriapsisHeight() != null) {
-                    Double a = orbitalProperties.getSemiMajorAxis();
-                    orbitalProperties.setApoapsisHeight(2*a - orbitalProperties.getPeriapsisHeight());
+                } else {
+                    if (orbitalProperties.getApoapsisHeight() != null) {
+                        Double a = orbitalProperties.getSemiMajorAxis();
+                        orbitalProperties.setPeriapsisHeight(2 * a - orbitalProperties.getApoapsisHeight());
+                    }
+                    if (orbitalProperties.getPeriapsisHeight() != null) {
+                        Double a = orbitalProperties.getSemiMajorAxis();
+                        orbitalProperties.setApoapsisHeight(2 * a - orbitalProperties.getPeriapsisHeight());
+                    }
+                    Double rA = orbitalProperties.getApoapsisHeight();
+                    Double rP = orbitalProperties.getPeriapsisHeight();
+                    orbitalProperties.setEccentricity((rA-rP)/(rA+rP));
                 }
             }
         }
