@@ -5,11 +5,13 @@ public class BodyProperties {
     private Double mass;
     private Double radius;
     private Double atmosphereThickness;
+    private Double sphereOfInfluence;
 
-    BodyProperties(Double mass, Double radius, Double atmosphereThickness) {
+    BodyProperties(Double mass, Double radius, Double atmosphereThickness, Double sphereOfInfluence) {
         this.mass = mass;
         this.radius = radius;
         this.atmosphereThickness = atmosphereThickness;
+        this.sphereOfInfluence = sphereOfInfluence;
     }
 
     public Double getMass() {
@@ -34,5 +36,13 @@ public class BodyProperties {
 
     public void setAtmosphereThickness(Double atmosphereThickness) {
         this.atmosphereThickness = atmosphereThickness;
+    }
+
+    public Double getSphereOfInfluence() {
+        return sphereOfInfluence;
+    }
+
+    public void setSphereOfInfluence(Double sphereOfInfluence) {
+        this.sphereOfInfluence = sphereOfInfluence;
     }
 }
