@@ -88,7 +88,8 @@ public class Main {
     }
 
     private static void validateInsideSphereOfInfluence() {
-        if (bodyProperties.getSphereOfInfluence() != null && orbitalProperties.getApoapsisHeight() > bodyProperties.getSphereOfInfluence()) {
+        if (bodyProperties.getSphereOfInfluence() != null &&
+                orbitalProperties.getApoapsisHeight() > bodyProperties.getSphereOfInfluence()) {
             throw new ImpossibleOrbitException("This orbit is outside this body's sphere of influence");
         }
     }
@@ -195,7 +196,8 @@ public class Main {
 
     private static void populateBodyMap() {
         bodyPropertiesMap = new HashMap<>();
-        bodyPropertiesMap.put("Kerbin", new BodyProperties(5.2915158 * Math.pow(10, 22), 600_000D, 70_000D, 84_159_286D));
+        bodyPropertiesMap
+                .put("Kerbin", new BodyProperties(5.2915158 * Math.pow(10, 22), 600_000D, 70_000D, 84_159_286D));
         bodyPropertiesMap.put("Mun", new BodyProperties(9.7599066 * Math.pow(10, 20), 200_000D, 0D, 2_429_559.1D));
     }
 }
