@@ -100,25 +100,13 @@ public class Main {
     }
 
     private static void validateHeightsAboveSurface() {
-        if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius()) {
-            throw new ImpossibleOrbitException(
-                    "Apoapsis is below surface. Value=" + (orbitalProperties.getApoapsisHeight() - bodyProperties
-                            .getRadius()));
-        } else if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius() + bodyProperties
-                .getAtmosphereThickness()) {
-            throw new ImpossibleOrbitException("Apoapsis is inside the atmosphere. Value=" + (orbitalProperties
-                    .getApoapsisHeight() - (bodyProperties.getRadius() + bodyProperties.getAtmosphereThickness())));
+        if (orbitalProperties.getPeriapsisHeight() < bodyProperties.getRadius()) {
+            throw new ImpossibleOrbitException("This orbit is below surface");
+        } else if (orbitalProperties.getPeriapsisHeight() <
+                bodyProperties.getRadius() + bodyProperties.getAtmosphereThickness()) {
+            throw new ImpossibleOrbitException("This orbit is inside the atmosphere");
         }
         orbitalProperties.setApoapsisHeightAS(orbitalProperties.getApoapsisHeight() - bodyProperties.getRadius());
-        if (orbitalProperties.getPeriapsisHeight() < bodyProperties.getRadius()) {
-            throw new ImpossibleOrbitException(
-                    "Periapsis is below surface. Value=" + (orbitalProperties.getPeriapsisHeight() - bodyProperties
-                            .getRadius()));
-        } else if (orbitalProperties.getApoapsisHeight() < bodyProperties.getRadius() + bodyProperties
-                .getAtmosphereThickness()) {
-            throw new ImpossibleOrbitException("Periapsis is inside the atmosphere. Value=" + (orbitalProperties
-                    .getPeriapsisHeight() - (bodyProperties.getRadius() + bodyProperties.getAtmosphereThickness())));
-        }
         orbitalProperties.setPeriapsisHeightAS(orbitalProperties.getPeriapsisHeight() - bodyProperties.getRadius());
     }
 
