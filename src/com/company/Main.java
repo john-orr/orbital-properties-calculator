@@ -25,13 +25,13 @@ public class Main {
     }
 
     private static void print() {
-        System.out.println(String.format("Orbital Period=\t\t%,.0f s", orbitalProperties.getOrbitalPeriod()));
-        System.out.println(String.format("Semi-Major Axis=\t%,.0f m", orbitalProperties.getSemiMajorAxis()));
-        System.out.println(String.format("Apoapsis=\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getApoapsisHeight(),
+        System.out.println(String.format("Orbital Period\t\t%,.0f s", orbitalProperties.getOrbitalPeriod()));
+        System.out.println(String.format("Semi-Major Axis\t\t%,.0f m", orbitalProperties.getSemiMajorAxis()));
+        System.out.println(String.format("Apoapsis\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getApoapsisHeight(),
                 orbitalProperties.getApoapsisHeightAS()));
-        System.out.println(String.format("Periapsis=\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getPeriapsisHeight(),
+        System.out.println(String.format("Periapsis\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getPeriapsisHeight(),
                 orbitalProperties.getPeriapsisHeightAS()));
-        System.out.println(String.format("Eccentricity=\t\t%.4f", orbitalProperties.getEccentricity()));
+        System.out.println(String.format("Eccentricity\t\t%.4f", orbitalProperties.getEccentricity()));
     }
 
     private static void calculateUnknownValues() {
