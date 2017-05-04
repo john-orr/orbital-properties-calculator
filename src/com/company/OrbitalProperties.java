@@ -56,6 +56,9 @@ public class OrbitalProperties {
         if (this.apoapsisHeight != null) {
             throw new RecalculationException("Attempted recalculation of apoapsis height");
         }
+        if (getPeriapsisHeight() != null && getPeriapsisHeight() > apoapsisHeight) {
+            throw new ImpossibleOrbitException("Apoapsis is lower than periapsis");
+        }
         this.apoapsisHeight = apoapsisHeight;
     }
 
@@ -66,6 +69,9 @@ public class OrbitalProperties {
     public void setPeriapsisHeight(Double periapsisHeight) {
         if (this.periapsisHeight != null) {
             throw new RecalculationException("Attempted recalculation of periapsis height");
+        }
+        if (getApoapsisHeight() != null && getApoapsisHeight() < periapsisHeight) {
+            throw new ImpossibleOrbitException("Periapsis is higher than apoapsis");
         }
         this.periapsisHeight = periapsisHeight;
     }
@@ -83,7 +89,7 @@ public class OrbitalProperties {
 
     public void setOrbitalPeriod(String orbitalPeriod) {
         try {
-            this.orbitalPeriod = Double.valueOf(orbitalPeriod);
+            setOrbitalPeriod(Double.valueOf(orbitalPeriod));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + orbitalPeriod);
         }
@@ -91,7 +97,7 @@ public class OrbitalProperties {
 
     public void setSemiMajorAxis(String semiMajorAxis) {
         try {
-            this.semiMajorAxis = Double.valueOf(semiMajorAxis);
+            setSemiMajorAxis(Double.valueOf(semiMajorAxis));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + semiMajorAxis);
         }
@@ -99,7 +105,7 @@ public class OrbitalProperties {
 
     public void setApoapsisHeight(String apoapsisHeight) {
         try {
-            this.apoapsisHeight = Double.valueOf(apoapsisHeight);
+            setApoapsisHeight(Double.valueOf(apoapsisHeight));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + apoapsisHeight);
         }
@@ -107,7 +113,7 @@ public class OrbitalProperties {
 
     public void setPeriapsisHeight(String periapsisHeight) {
         try {
-            this.periapsisHeight = Double.valueOf(periapsisHeight);
+            setPeriapsisHeight(Double.valueOf(periapsisHeight));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + periapsisHeight);
         }
@@ -115,7 +121,7 @@ public class OrbitalProperties {
 
     public void setEccentricity(String eccentricity) {
         try {
-            this.eccentricity = Double.valueOf(eccentricity);
+            setEccentricity(Double.valueOf(eccentricity));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Invalid value for orbital period (T): " + eccentricity);
         }
