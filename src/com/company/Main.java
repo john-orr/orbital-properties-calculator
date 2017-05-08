@@ -14,10 +14,11 @@ public class Main {
     static Map<String, BodyProperties> bodyPropertiesMap;
     static BodyProperties bodyProperties;
     static OrbitalProperties orbitalProperties;
+    static String resultPrecision;
 
     public static void main(String[] args) throws IOException {
         populateBodyMap();
-        readKnownValues();
+        readInputParameters();
         if (knownValuesAreValid()) {
             calculateUnknownValues();
             print();
@@ -25,12 +26,15 @@ public class Main {
     }
 
     private static void print() {
-        System.out.println(String.format("Orbital Period\t\t%,.0f s", orbitalProperties.getOrbitalPeriod()));
-        System.out.println(String.format("Semi-Major Axis\t\t%,.0f m", orbitalProperties.getSemiMajorAxis()));
-        System.out.println(String.format("Apoapsis\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getApoapsisHeight(),
-                orbitalProperties.getApoapsisHeightAS()));
-        System.out.println(String.format("Periapsis\t\t\t%,.0f m (%,.0f m)", orbitalProperties.getPeriapsisHeight(),
-                orbitalProperties.getPeriapsisHeightAS()));
+        String numberFormat = "." + resultPrecision + "f";
+        System.out.println(
+                String.format("Orbital Period\t\t%," + numberFormat + " s", orbitalProperties.getOrbitalPeriod()));
+        System.out.println(
+                String.format("Semi-Major Axis\t\t%," + numberFormat + " m", orbitalProperties.getSemiMajorAxis()));
+        System.out.println(String.format("Apoapsis\t\t\t%," + numberFormat + " m (%," + numberFormat + " m)",
+                orbitalProperties.getApoapsisHeight(), orbitalProperties.getApoapsisHeightAS()));
+        System.out.println(String.format("Periapsis\t\t\t%," + numberFormat + " m (%," + numberFormat + " m)",
+                orbitalProperties.getPeriapsisHeight(), orbitalProperties.getPeriapsisHeightAS()));
         System.out.println(String.format("Eccentricity\t\t%.4f", orbitalProperties.getEccentricity()));
     }
 
@@ -163,7 +167,7 @@ public class Main {
         return numPresent;
     }
 
-    private static void readKnownValues() throws IOException {
+    private static void readInputParameters() throws IOException {
         Properties properties = new Properties();
         properties.load(new FileReader(new File("resources/known_values.properties")));
         bodyProperties = bodyPropertiesMap.get(properties.getProperty("body"));
@@ -192,6 +196,11 @@ public class Main {
         if (eccentricity != null && !eccentricity.isEmpty()) {
             orbitalProperties.setEccentricity(eccentricity);
         }
+        resultPrecision = defaultIfNull(properties.getProperty("precision"), "0");
+    }
+
+    private static String defaultIfNull(String precision, String defaultValue) {
+        return precision != null && !precision.isEmpty() ? precision : defaultValue;
     }
 
     private static void populateBodyMap() {
