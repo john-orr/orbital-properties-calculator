@@ -11,6 +11,8 @@ public class Main {
 
     static final double G = 6.67408 * Math.pow(10, -11);
     static final double _4pi2 = 4 * Math.pow(Math.PI, 2);
+    static final long SECONDS_IN_MINUTE = 60;
+    static final long SECONDS_IN_HOUR = SECONDS_IN_MINUTE*60;
     static Map<String, BodyProperties> bodyPropertiesMap;
     static BodyProperties bodyProperties;
     static OrbitalProperties orbitalProperties;
@@ -27,8 +29,7 @@ public class Main {
 
     private static void print() {
         String numberFormat = "." + resultPrecision + "f";
-        System.out.println(
-                String.format("Orbital Period\t\t%," + numberFormat + " s", orbitalProperties.getOrbitalPeriod()));
+        System.out.println(formatOrbitalPeriod());
         System.out.println(
                 String.format("Semi-Major Axis\t\t%," + numberFormat + " m", orbitalProperties.getSemiMajorAxis()));
         System.out.println(String.format("Apoapsis\t\t\t%," + numberFormat + " m (%," + numberFormat + " m)",
@@ -36,6 +37,25 @@ public class Main {
         System.out.println(String.format("Periapsis\t\t\t%," + numberFormat + " m (%," + numberFormat + " m)",
                 orbitalProperties.getPeriapsisHeight(), orbitalProperties.getPeriapsisHeightAS()));
         System.out.println(String.format("Eccentricity\t\t%.4f", orbitalProperties.getEccentricity()));
+    }
+
+    private static String formatOrbitalPeriod() {
+        StringBuilder output = new StringBuilder("Orbital Period\t\t");
+        long orbitalPeriod = Math.round(orbitalProperties.getOrbitalPeriod());
+        if (orbitalPeriod > SECONDS_IN_HOUR) {
+            long numHours = orbitalPeriod / SECONDS_IN_HOUR;
+            output.append(numHours).append("h ");
+            orbitalPeriod -= numHours * SECONDS_IN_HOUR;
+        }
+        if (orbitalPeriod >= SECONDS_IN_MINUTE) {
+            long numMinutes = orbitalPeriod / SECONDS_IN_MINUTE;
+            output.append(numMinutes).append("m ");
+            orbitalPeriod -= numMinutes * SECONDS_IN_MINUTE;
+        }
+        if (orbitalPeriod > 0) {
+            output.append(orbitalPeriod).append("s");
+        }
+        return output.toString();
     }
 
     private static void calculateUnknownValues() {
@@ -174,8 +194,7 @@ public class Main {
         orbitalProperties = new OrbitalProperties();
         String orbitalPeriod = properties.getProperty("T");
         if (orbitalPeriod != null && !orbitalPeriod.isEmpty()) {
-            orbitalPeriod = orbitalPeriod.replaceAll(",", "");
-            orbitalProperties.setOrbitalPeriod(orbitalPeriod);
+            orbitalProperties.setOrbitalPeriod(parseOrbitalPeriod(orbitalPeriod));
         }
         String semiMajorAxis = properties.getProperty("a");
         if (semiMajorAxis != null && !semiMajorAxis.isEmpty()) {
@@ -197,6 +216,30 @@ public class Main {
             orbitalProperties.setEccentricity(eccentricity);
         }
         resultPrecision = defaultIfNull(properties.getProperty("precision"), "0");
+    }
+
+    private static Double parseOrbitalPeriod(String orbitalPeriod) {
+        orbitalPeriod = orbitalPeriod.replaceAll(",", "");
+        String[] split = orbitalPeriod.split(" ");
+        Double numSeconds = 0D;
+        for (String numberAndUnit : split) {
+            if (numberAndUnit.length() > 1) {
+                String unit = numberAndUnit.substring(numberAndUnit.length() - 1);
+                Double number = Double.valueOf(numberAndUnit.substring(0, numberAndUnit.length() - 1));
+                switch (unit) {
+                    case "s":
+                        numSeconds += number;
+                        break;
+                    case "m":
+                        numSeconds += number * SECONDS_IN_MINUTE;
+                        break;
+                    case "h":
+                        numSeconds += number * SECONDS_IN_HOUR;
+                        break;
+                }
+            }
+        }
+        return numSeconds;
     }
 
     private static String defaultIfNull(String precision, String defaultValue) {
