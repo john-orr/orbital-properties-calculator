@@ -40,14 +40,14 @@ public class OrbitalProperties {
 
     public void setOrbitalPeriod(Double orbitalPeriod) {
         if (this.orbitalPeriod != null) {
-            throw new RecalculationException("Attemped recalculation of orbital period");
+            throw new RecalculationException("Attempted recalculation of orbital period");
         }
         this.orbitalPeriod = orbitalPeriod;
     }
 
     public void setSemiMajorAxis(Double semiMajorAxis) {
         if (this.semiMajorAxis != null) {
-            throw new RecalculationException("Attemped recalculation of semi-major axis");
+            throw new RecalculationException("Attempted recalculation of semi-major axis");
         }
         this.semiMajorAxis = semiMajorAxis;
     }
