@@ -3,8 +3,6 @@ package com.company;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class Main {
@@ -13,13 +11,11 @@ public class Main {
     static final double _4pi2 = 4 * Math.pow(Math.PI, 2);
     static final long SECONDS_IN_MINUTE = 60;
     static final long SECONDS_IN_HOUR = SECONDS_IN_MINUTE*60;
-    static Map<String, BodyProperties> bodyPropertiesMap;
     static BodyProperties bodyProperties;
     static OrbitalProperties orbitalProperties;
     static String resultPrecision;
 
     public static void main(String[] args) throws IOException {
-        populateBodyMap();
         readInputParameters();
         if (knownValuesAreValid()) {
             calculateUnknownValues();
@@ -190,7 +186,7 @@ public class Main {
     private static void readInputParameters() throws IOException {
         Properties properties = new Properties();
         properties.load(new FileReader(new File("resources/known_values.properties")));
-        bodyProperties = bodyPropertiesMap.get(properties.getProperty("body"));
+        bodyProperties = getBodyProperties(properties.getProperty("body"));
         orbitalProperties = new OrbitalProperties();
         String orbitalPeriod = properties.getProperty("T");
         if (orbitalPeriod != null && !orbitalPeriod.isEmpty()) {
@@ -268,10 +264,21 @@ public class Main {
         return precision != null && !precision.isEmpty() ? precision : defaultValue;
     }
 
-    private static void populateBodyMap() {
-        bodyPropertiesMap = new HashMap<>();
-        bodyPropertiesMap
-                .put("Kerbin", new BodyProperties(5.2915158 * Math.pow(10, 22), 600_000D, 70_000D, 84_159_286D));
-        bodyPropertiesMap.put("Mun", new BodyProperties(9.7599066 * Math.pow(10, 20), 200_000D, 0D, 2_429_559.1D));
+    private static BodyProperties getBodyProperties(String body) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(new File("resources/system.properties")));
+        Double mass = calculateValue(properties.getProperty(body + ".mass"));
+        Double radius = calculateValue(properties.getProperty(body + ".radius"));
+        Double atmosphere = calculateValue(properties.getProperty(body + ".atmosphere"));
+        Double soi = calculateValue(properties.getProperty(body + ".soi"));
+
+        return new BodyProperties(mass, radius, atmosphere, soi);
+    }
+
+    private static Double calculateValue(String property) {
+        String[] split = property.split("\\^");
+        double value = Double.parseDouble(split[0]);
+        double orderOfMagnitude = Double.parseDouble(split[1]);
+        return value*Math.pow(10, orderOfMagnitude);
     }
 }
