@@ -201,21 +201,43 @@ public class Main {
             semiMajorAxis = semiMajorAxis.replaceAll(",", "");
             orbitalProperties.setSemiMajorAxis(semiMajorAxis);
         }
-        String apoapsisHeight = properties.getProperty("rA");
-        if (apoapsisHeight != null && !apoapsisHeight.isEmpty()) {
-            apoapsisHeight = apoapsisHeight.replaceAll(",", "");
-            orbitalProperties.setApoapsisHeight(apoapsisHeight);
+        String inputApoapsisHeight = properties.getProperty("rA");
+        if (inputApoapsisHeight != null && !inputApoapsisHeight.isEmpty()) {
+            try {
+                Double apoapsisHeight = interpretInputHeight(inputApoapsisHeight);
+                orbitalProperties.setApoapsisHeight(apoapsisHeight);
+            } catch (NumberFormatException e) {
+                throw new NumberFormatException("Invalid value for apoapsis height (rA): " + inputApoapsisHeight);
+            }
         }
-        String periapsisHeight = properties.getProperty("rP");
-        if (periapsisHeight != null && !periapsisHeight.isEmpty()) {
-            periapsisHeight = periapsisHeight.replaceAll(",", "");
-            orbitalProperties.setPeriapsisHeight(periapsisHeight);
+        String inputPeriapsisHeight = properties.getProperty("rP");
+        if (inputPeriapsisHeight != null && !inputPeriapsisHeight.isEmpty()) {
+            try {
+                Double periapsisHeight = interpretInputHeight(inputPeriapsisHeight);
+                orbitalProperties.setPeriapsisHeight(periapsisHeight);
+            } catch (NumberFormatException e) {
+                throw new NumberFormatException("Invalid value for periapsis height (rA): " + inputPeriapsisHeight);
+            }
         }
         String eccentricity = properties.getProperty("e");
         if (eccentricity != null && !eccentricity.isEmpty()) {
             orbitalProperties.setEccentricity(eccentricity);
         }
         resultPrecision = defaultIfNull(properties.getProperty("precision"), "0");
+    }
+
+    private static Double interpretInputHeight(String inputApoapsisHeight) {
+        String inputHeight = inputApoapsisHeight.replaceAll(",", "");
+        boolean referenceAboveSurface = false;
+        if (inputHeight.endsWith("AS")) {
+            referenceAboveSurface = true;
+            inputHeight = inputHeight.substring(0, inputHeight.length() - 2);
+        }
+        Double trueHeight = Double.parseDouble(inputHeight);
+        if (referenceAboveSurface) {
+            trueHeight += bodyProperties.getRadius();
+        }
+        return trueHeight;
     }
 
     private static Double parseOrbitalPeriod(String orbitalPeriod) {

@@ -87,35 +87,11 @@ public class OrbitalProperties {
         this.eccentricity = eccentricity;
     }
 
-    public void setOrbitalPeriod(String orbitalPeriod) {
-        try {
-            setOrbitalPeriod(Double.valueOf(orbitalPeriod));
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid value for orbital period (T): " + orbitalPeriod);
-        }
-    }
-
     public void setSemiMajorAxis(String semiMajorAxis) {
         try {
             setSemiMajorAxis(Double.valueOf(semiMajorAxis));
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid value for orbital period (T): " + semiMajorAxis);
-        }
-    }
-
-    public void setApoapsisHeight(String apoapsisHeight) {
-        try {
-            setApoapsisHeight(Double.valueOf(apoapsisHeight));
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid value for orbital period (T): " + apoapsisHeight);
-        }
-    }
-
-    public void setPeriapsisHeight(String periapsisHeight) {
-        try {
-            setPeriapsisHeight(Double.valueOf(periapsisHeight));
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid value for orbital period (T): " + periapsisHeight);
+            throw new NumberFormatException("Invalid value for semi major axis (a): " + semiMajorAxis);
         }
     }
 
@@ -123,7 +99,7 @@ public class OrbitalProperties {
         try {
             setEccentricity(Double.valueOf(eccentricity));
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid value for orbital period (T): " + eccentricity);
+            throw new NumberFormatException("Invalid value for eccentricity (e): " + eccentricity);
         }
     }
 
