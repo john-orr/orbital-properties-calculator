@@ -82,7 +82,7 @@ public class Main {
                     } else {
                         orbitalProperties.setApoapsisHeight(2 * a - orbitalProperties.getPeriapsisHeight());
                     }
-                    calculateEFromRaAndRp();
+                    calculateEFromRaAndOrRp();
                 }
             }
         } else {
@@ -97,7 +97,7 @@ public class Main {
                     orbitalProperties.setApoapsisHeight(orbitalProperties.getPeriapsisHeight() * ratioRaToRp);
                 }
             } else {
-                calculateEFromRaAndRp();
+                calculateEFromRaAndOrRp();
             }
             orbitalProperties.setSemiMajorAxis(
                     (orbitalProperties.getApoapsisHeight() + orbitalProperties.getPeriapsisHeight()) / 2);
@@ -114,9 +114,22 @@ public class Main {
         }
     }
 
-    private static void calculateEFromRaAndRp() {
-        Double rA = orbitalProperties.getApoapsisHeight();
-        Double rP = orbitalProperties.getPeriapsisHeight();
+    private static void calculateEFromRaAndOrRp() {
+        boolean apoapsisPresent = orbitalProperties.getApoapsisHeight() != null;
+        boolean periapsisPresent = orbitalProperties.getPeriapsisHeight() != null;
+        Double rA;
+        Double rP;
+        if (!(apoapsisPresent && periapsisPresent)) {
+            System.out.println("Assuming circular orbit");
+            if (apoapsisPresent) {
+                orbitalProperties.setPeriapsisHeight(orbitalProperties.getApoapsisHeight());
+            } else {
+                // periapsisPresent
+                orbitalProperties.setApoapsisHeight(orbitalProperties.getPeriapsisHeight());
+            }
+        }
+        rA = orbitalProperties.getApoapsisHeight();
+        rP = orbitalProperties.getPeriapsisHeight();
         orbitalProperties.setEccentricity((rA - rP) / (rA + rP));
     }
 
@@ -156,12 +169,15 @@ public class Main {
         } else if (orbitalProperties.getOrbitalPeriod() == null && orbitalProperties.getSemiMajorAxis() == null) {
             // both T and a missing then we need 2 out of e, rA and rP to be present
             int numPresent = countTier2Properties();
-            if (numPresent < 2) {
+            if (numPresent < 1) {
                 System.out.println("Not enough information provided");
                 return false;
             } else if (numPresent > 2) {
                 System.out.println("Too much information provided!");
                 return false;
+            } else if (orbitalProperties.getEccentricity() != null) {
+                // numPresent = 1, has to be either rA or rP, otherwise invalid
+                System.out.println("Not enough information provided");
             }
         } else {
             // One of T and a has been provided
