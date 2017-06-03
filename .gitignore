@@ -1,4 +1,4 @@
-resources
+known_values.properties
 out
 .idea
 *.iml
